@@ -15,8 +15,7 @@ export default function Privacy() {
       <section className="section">
         <div className="container prose">
           <p>
-            {t('Оператор персональных данных —')} {CONTACTS.legalName} ({t('ИНН')} {CONTACTS.inn},
-            {t('ОГРНИП')} {CONTACTS.ogrnip}), {t('языковой центр «Лингвист»')}, {t(CONTACTS.addressFull)}.
+            {t('Оператор персональных данных —')} {CONTACTS.legalName} ({t('ИНН')} {CONTACTS.inn}, {t('ОГРНИП')} {CONTACTS.ogrnip}), {t('языковой центр «Лингвист»')}, {t(CONTACTS.addressFull)}.
           </p>
           <h2>{t('Какие данные мы собираем')}</h2>
           <p>
