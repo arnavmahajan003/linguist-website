@@ -923,4 +923,27 @@ zh['Перейти к содержанию'] = '跳到主要内容';
 de['Перейти к содержанию'] = 'Zum Inhalt springen';
 fr['Перейти к содержанию'] = 'Aller au contenu';
 
+const SEG1 = 'Группы формируются с учётом психологических и личностных особенностей учащихся. Группы занимаются по расписанию, продолжительность одного занятия —';
+const SEG3 = '. Приём на обучение — по результатам';
+en[SEG1] = 'Groups are formed taking into account the psychological and personal characteristics of the students. Groups study on a schedule; one lesson lasts';
+en['60 минут'] = '60 minutes';
+en[SEG3] = '. Admission is based on the results of a';
+en['бесплатного тестирования'] = 'free level test';
+en['.'] = '.';
+zh[SEG1] = '分班时考虑学生的心理和个性特点。班级按课表上课，每节课';
+zh['60 минут'] = '60 分钟';
+zh[SEG3] = '。根据';
+zh['бесплатного тестирования'] = '免费水平测试';
+zh['.'] = '结果录取。';
+de[SEG1] = 'Die Gruppen werden unter Berücksichtigung der psychologischen und persönlichen Eigenschaften der Schüler gebildet. Die Gruppen lernen nach Stundenplan; eine Stunde dauert';
+de['60 минут'] = '60 Minuten';
+de[SEG3] = '. Die Aufnahme erfolgt nach dem';
+de['бесплатного тестирования'] = 'kostenlosen Einstufungstest';
+de['.'] = '.';
+fr[SEG1] = 'Les groupes sont formés en tenant compte des particularités psychologiques et personnelles des élèves. Les groupes suivent un emploi du temps ; un cours dure';
+fr['60 минут'] = '60 minutes';
+fr[SEG3] = ". L'admission se fait selon les résultats du";
+fr['бесплатного тестирования'] = 'test de niveau gratuit';
+fr['.'] = '.';
+
 export const DICTS: Record<Exclude<Lang, 'ru'>, Record<string, string>> = { en, zh, de, fr };

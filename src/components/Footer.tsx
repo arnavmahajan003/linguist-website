@@ -30,13 +30,19 @@ export default function Footer() {
           </ul>
         </nav>
         <div>
-          <p className="footer-heading">{t('Контакты')}</p>
-          <ul className="footer-list">
-            <li>{t(CONTACTS.addressFull)}</li>
-            <li><a href={CONTACTS.phoneHref}>{CONTACTS.phoneDisplay}</a></li>
-            <li><a href={`mailto:${CONTACTS.email}`}>{CONTACTS.email}</a></li>
-            <li>{t(CONTACTS.hours)}</li>
-          </ul>
+          <div className="footer-card">
+            <p className="footer-heading">{t('Контакты')}</p>
+            <ul className="footer-list">
+              <li>{t(CONTACTS.addressFull)}</li>
+              <li><a href={CONTACTS.phoneHref}>{CONTACTS.phoneDisplay}</a></li>
+              <li><a href={`mailto:${CONTACTS.email}`}>{CONTACTS.email}</a></li>
+              <li className="footer-hours">
+                {t(CONTACTS.hours).split(', ').map((part) => (
+                  <span key={part}>{part}</span>
+                ))}
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
       <div className="container footer-bottom">

@@ -69,31 +69,33 @@ export default function Header() {
               {t(item.label)}
             </NavLink>
           ))}
+          <div className="menu-controls">
+            <a className="menu-phone" href={CONTACTS.phoneHref}>{CONTACTS.phoneDisplay}</a>
+            <Link className="btn btn-primary" to="/kontakty#zayavka" onClick={() => setOpen(false)}>
+              {t('Бесплатное занятие')}
+            </Link>
+            <div className="menu-switches">
+              <select
+                className="lang-select"
+                aria-label={t('Язык сайта')}
+                value={lang}
+                onChange={(e) => setLang(e.target.value as Lang)}
+              >
+                {LANGS.map((l) => (
+                  <option key={l.code} value={l.code}>{l.label}</option>
+                ))}
+              </select>
+              <button
+                type="button"
+                className="theme-btn"
+                onClick={toggleTheme}
+                aria-label={theme === 'dark' ? t('Светлая тема') : t('Тёмная тема')}
+              >
+                <span aria-hidden="true">{theme === 'dark' ? '☀' : '☾'}</span>
+              </button>
+            </div>
+          </div>
         </nav>
-        <div className="header-cta">
-          <select
-            className="lang-select"
-            aria-label={t('Язык сайта')}
-            value={lang}
-            onChange={(e) => setLang(e.target.value as Lang)}
-          >
-            {LANGS.map((l) => (
-              <option key={l.code} value={l.code}>{l.label}</option>
-            ))}
-          </select>
-          <button
-            type="button"
-            className="theme-btn"
-            onClick={toggleTheme}
-            aria-label={theme === 'dark' ? t('Светлая тема') : t('Тёмная тема')}
-          >
-            <span aria-hidden="true">{theme === 'dark' ? '☀' : '☾'}</span>
-          </button>
-          <a className="header-phone" href={CONTACTS.phoneHref}>{CONTACTS.phoneDisplay}</a>
-          <Link className="btn btn-primary btn-small" to="/kontakty#zayavka" onClick={() => setOpen(false)}>
-            {t('Бесплатное занятие')}
-          </Link>
-        </div>
       </div>
     </header>
   );
