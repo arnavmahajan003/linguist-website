@@ -48,15 +48,35 @@ export default function Header() {
             <span className="logo-sub">{t('языковой центр · Тверь')}</span>
           </span>
         </Link>
-        <button
-          className="burger"
-          aria-expanded={open}
-          aria-controls="main-nav"
-          aria-label={open ? t('Закрыть меню') : t('Открыть меню')}
-          onClick={() => setOpen((v) => !v)}
-        >
-          <span aria-hidden="true">{open ? '✕' : '☰'}</span>
-        </button>
+        <div className="header-actions">
+          <select
+            className="lang-select"
+            aria-label={t('Язык сайта')}
+            value={lang}
+            onChange={(e) => setLang(e.target.value as Lang)}
+          >
+            {LANGS.map((l) => (
+              <option key={l.code} value={l.code}>{l.label}</option>
+            ))}
+          </select>
+          <button
+            type="button"
+            className="theme-btn"
+            onClick={toggleTheme}
+            aria-label={theme === 'dark' ? t('Светлая тема') : t('Тёмная тема')}
+          >
+            <span aria-hidden="true">{theme === 'dark' ? '☀' : '☾'}</span>
+          </button>
+          <button
+            className="burger"
+            aria-expanded={open}
+            aria-controls="main-nav"
+            aria-label={open ? t('Закрыть меню') : t('Открыть меню')}
+            onClick={() => setOpen((v) => !v)}
+          >
+            <span aria-hidden="true">{open ? '✕' : '☰'}</span>
+          </button>
+        </div>
         <nav id="main-nav" className={`nav ${open ? 'nav-open' : ''}`} aria-label={t('Основная навигация')}>
           {NAV.map((item) => (
             <NavLink
@@ -74,26 +94,6 @@ export default function Header() {
             <Link className="btn btn-primary" to="/kontakty#zayavka" onClick={() => setOpen(false)}>
               {t('Бесплатное занятие')}
             </Link>
-            <div className="menu-switches">
-              <select
-                className="lang-select"
-                aria-label={t('Язык сайта')}
-                value={lang}
-                onChange={(e) => setLang(e.target.value as Lang)}
-              >
-                {LANGS.map((l) => (
-                  <option key={l.code} value={l.code}>{l.label}</option>
-                ))}
-              </select>
-              <button
-                type="button"
-                className="theme-btn"
-                onClick={toggleTheme}
-                aria-label={theme === 'dark' ? t('Светлая тема') : t('Тёмная тема')}
-              >
-                <span aria-hidden="true">{theme === 'dark' ? '☀' : '☾'}</span>
-              </button>
-            </div>
           </div>
         </nav>
       </div>

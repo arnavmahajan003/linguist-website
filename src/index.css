@@ -187,9 +187,9 @@ p { max-width: 68ch; margin: 0 0 16px; }
   color: var(--ink);
 }
 .menu-phone:hover { color: var(--link); }
-.menu-switches { display: flex; gap: 10px; align-items: center; padding: 0 2px; }
+.header-actions { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+.header-actions .burger { margin-left: 0; }
 .lang-select {
-  flex: 1;
   font: inherit;
   font-size: 14px;
   font-weight: 600;
@@ -200,6 +200,17 @@ p { max-width: 68ch; margin: 0 0 16px; }
   height: 44px;
   padding: 0 8px;
   cursor: pointer;
+  box-shadow: var(--shadow-sm);
+}
+@media (max-width: 420px) {
+  .header-inner { gap: 8px; }
+  .header-actions { gap: 7px; }
+  .logo { gap: 8px; }
+  .logo-mark { width: 40px; height: 40px; font-size: 18px; }
+  .logo-name { font-size: 16px; }
+  .lang-select { height: 40px; padding: 0 5px; font-size: 13px; }
+  .theme-btn { width: 40px; height: 40px; }
+  .burger { width: 44px; height: 44px; }
 }
 .theme-btn {
   width: 44px;
