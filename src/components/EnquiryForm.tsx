@@ -2,10 +2,12 @@ import { useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { COURSE_OPTIONS } from '../data/content';
 import { submitEnquiry } from '../lib/supabase';
+import { useLang } from '../i18n/i18n';
 
 type Status = 'idle' | 'sending' | 'sent' | 'error';
 
 export default function EnquiryForm({ defaultCourse = '' }: { defaultCourse?: string }) {
+  const { t } = useLang();
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [course, setCourse] = useState(defaultCourse);
@@ -17,12 +19,12 @@ export default function EnquiryForm({ defaultCourse = '' }: { defaultCourse?: st
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     if (!name.trim() || !phone.trim()) {
-      setErrorText('Пожалуйста, укажите имя и телефон.');
+      setErrorText(t('Пожалуйста, укажите имя и телефон.'));
       setStatus('error');
       return;
     }
     if (!consent) {
-      setErrorText('Для отправки заявки нужно согласие на обработку персональных данных.');
+      setErrorText(t('Для отправки заявки нужно согласие на обработку персональных данных.'));
       setStatus('error');
       return;
     }
@@ -37,7 +39,7 @@ export default function EnquiryForm({ defaultCourse = '' }: { defaultCourse?: st
       });
       setStatus('sent');
     } catch {
-      setErrorText('Не удалось отправить заявку. Позвоните нам, пожалуйста: 8 (920) 186-99-69.');
+      setErrorText(t('Не удалось отправить заявку. Позвоните нам, пожалуйста: 8 (920) 186-99-69.'));
       setStatus('error');
     }
   }
@@ -45,8 +47,8 @@ export default function EnquiryForm({ defaultCourse = '' }: { defaultCourse?: st
   if (status === 'sent') {
     return (
       <div className="form-success" role="status">
-        <p className="form-success-title">Заявка принята!</p>
-        <p>Спасибо, {name.trim()}. Мы свяжемся с вами в рабочее время: Пн–Пт с 10:00 до 19:00.</p>
+        <p className="form-success-title">{t('Заявка принята!')}</p>
+        <p>{t('Спасибо')}, {name.trim()}. {t('Мы свяжемся с вами в рабочее время: Пн–Пт с 10:00 до 19:00.')}</p>
       </div>
     );
   }
@@ -55,7 +57,7 @@ export default function EnquiryForm({ defaultCourse = '' }: { defaultCourse?: st
     <form className="form" onSubmit={onSubmit} noValidate={false}>
       <div className="form-row">
         <label className="field">
-          <span>Ваше имя *</span>
+          <span>{t('Ваше имя *')}</span>
           <input
             type="text"
             name="name"
@@ -63,11 +65,11 @@ export default function EnquiryForm({ defaultCourse = '' }: { defaultCourse?: st
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Например, Анна"
+            placeholder={t('Например, Анна')}
           />
         </label>
         <label className="field">
-          <span>Телефон *</span>
+          <span>{t('Телефон *')}</span>
           <input
             type="tel"
             name="phone"
@@ -80,37 +82,37 @@ export default function EnquiryForm({ defaultCourse = '' }: { defaultCourse?: st
         </label>
       </div>
       <label className="field">
-        <span>Интересующий курс</span>
+        <span>{t('Интересующий курс')}</span>
         <select name="course" value={course} onChange={(e) => setCourse(e.target.value)}>
-          <option value="">Выберите курс…</option>
+          <option value="">{t('Выберите курс…')}</option>
           {COURSE_OPTIONS.map((c) => (
-            <option key={c} value={c}>{c}</option>
+            <option key={c} value={c}>{t(c)}</option>
           ))}
         </select>
       </label>
       <label className="field">
-        <span>Комментарий</span>
+        <span>{t('Комментарий')}</span>
         <textarea
           name="message"
           rows={3}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          placeholder="Например: хочу записать ребёнка 9 лет на английский"
+          placeholder={t('Например: хочу записать ребёнка 9 лет на английский')}
         />
       </label>
       <label className="consent">
         <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} required />
         <span>
-          Соглашаюсь с <Link to="/konfidentsialnost">обработкой персональных данных</Link> *
+          {t('Соглашаюсь с')} <Link to="/konfidentsialnost">{t('обработкой персональных данных')}</Link> *
         </span>
       </label>
       {status === 'error' && (
         <p className="form-error" role="alert">{errorText}</p>
       )}
       <button type="submit" className="btn btn-primary btn-large" disabled={status === 'sending'}>
-        {status === 'sending' ? 'Отправляем…' : 'Записаться на бесплатное занятие'}
+        {status === 'sending' ? t('Отправляем…') : t('Записаться на бесплатное занятие')}
       </button>
-      <p className="form-note">Первое занятие и тестирование уровня — бесплатно.</p>
+      <p className="form-note">{t('Первое занятие и тестирование уровня — бесплатно.')}</p>
     </form>
   );
 }

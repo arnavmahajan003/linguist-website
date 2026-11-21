@@ -12,12 +12,21 @@ import Contacts from './pages/Contacts';
 import Privacy from './pages/Privacy';
 import Admin from './pages/Admin';
 import NotFound from './pages/NotFound';
+import { LanguageProvider, useLang } from './i18n/i18n';
 
 function StickyCta() {
   const { pathname } = useLocation();
+  const { t } = useLang();
   if (pathname === '/kontakty' || pathname === '/admin') return null;
   return (
-    <Link className="sticky-cta" to="/kontakty#zayavka">Бесплатное занятие</Link>
+    <Link className="sticky-cta" to="/kontakty#zayavka">{t('Бесплатное занятие')}</Link>
+  );
+}
+
+function SkipLink() {
+  const { t } = useLang();
+  return (
+    <a className="skip-link" href="#main">{t('Перейти к содержанию')}</a>
   );
 }
 
@@ -31,9 +40,10 @@ function ScrollToTop() {
 
 export default function App() {
   return (
+    <LanguageProvider>
     <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, '') || undefined}>
       <ScrollToTop />
-      <a className="skip-link" href="#main">Перейти к содержанию</a>
+      <SkipLink />
       <Header />
       <main id="main">
         <Routes>
@@ -52,5 +62,6 @@ export default function App() {
       <Footer />
       <StickyCta />
     </BrowserRouter>
+    </LanguageProvider>
   );
 }

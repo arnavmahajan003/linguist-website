@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import EnquiryForm from '../components/EnquiryForm';
 import PageTitle from '../components/PageTitle';
 import { CONTACTS, REVIEWS } from '../data/content';
+import { useLang } from '../i18n/i18n';
 
 const ICON_PROPS = {
   viewBox: '0 0 24 24',
@@ -83,26 +84,26 @@ const COURSES = [
 ];
 
 export default function Home() {
+  const { t } = useLang();
   return (
     <>
       <PageTitle title="Курсы иностранных языков в Твери" />
       <section className="hero">
         <div className="container hero-grid">
           <div className="hero-inner">
-          <p className="hero-badge">Языковой центр в Твери · работаем с 2011 года</p>
-          <h1>Иностранные языки — легко, в мини-группах и с результатом</h1>
+          <p className="hero-badge">{t('Языковой центр в Твери · работаем с 2011 года')}</p>
+          <h1>{t('Иностранные языки — легко, в мини-группах и с результатом')}</h1>
           <p className="hero-lead">
-            Английский, немецкий и русский языки для детей и взрослых. Подготовка к ОГЭ, ЕГЭ и экзаменам
-            Cambridge, деловые курсы и образовательные поездки за рубеж.
+            {t('Английский, немецкий и русский языки для детей и взрослых. Подготовка к ОГЭ, ЕГЭ и экзаменам Cambridge, деловые курсы и образовательные поездки за рубеж.')}
           </p>
           <div className="hero-actions">
-            <Link className="btn btn-primary btn-large" to="/kontakty#zayavka">Записаться на бесплатное занятие</Link>
-            <Link className="btn btn-ghost btn-large" to="/kursy">Смотреть курсы</Link>
+            <Link className="btn btn-primary btn-large" to="/kontakty#zayavka">{t('Записаться на бесплатное занятие')}</Link>
+            <Link className="btn btn-ghost btn-large" to="/kursy">{t('Смотреть курсы')}</Link>
           </div>
           <ul className="hero-points">
-            <li>Мини-группы 3–5 человек</li>
-            <li>Бесплатное тестирование уровня</li>
-            <li>Два первых занятия — бесплатно</li>
+            <li>{t('Мини-группы 3–5 человек')}</li>
+            <li>{t('Бесплатное тестирование уровня')}</li>
+            <li>{t('Два первых занятия — бесплатно')}</li>
           </ul>
           </div>
           <div className="hero-visual" aria-hidden="true">
@@ -117,13 +118,13 @@ export default function Home() {
 
       <section className="section section-overlap">
         <div className="container">
-          <h2 className="section-title">Почему именно «Лингвист»?</h2>
+          <h2 className="section-title">{t('Почему именно «Лингвист»?')}</h2>
           <div className="grid grid-3 benefits-grid">
             {ADVANTAGES.map((a, i) => (
               <article className={`card benefit-card${i === 2 ? ' benefit-free' : ''}`} key={a.title}>
                 <span className={`benefit-icon${i % 2 ? ' benefit-icon-sun' : ''}`} aria-hidden="true">{ICONS[i]}</span>
-                <h3>{a.title}</h3>
-                <p>{a.text}</p>
+                <h3>{t(a.title)}</h3>
+                <p>{t(a.text)}</p>
               </article>
             ))}
           </div>
@@ -132,31 +133,30 @@ export default function Home() {
 
       <section className="section section-tint">
         <div className="container">
-          <h2 className="section-title">Наши курсы</h2>
+          <h2 className="section-title">{t('Наши курсы')}</h2>
           <div className="grid grid-3 courses-grid">
             {COURSES.map((c) => (
               <Link className="card card-link" to={c.to} key={c.title}>
-                <h3>{c.title}</h3>
-                <p>{c.text}</p>
-                <span className="card-more">Подробнее →</span>
+                <h3>{t(c.title)}</h3>
+                <p>{t(c.text)}</p>
+                <span className="card-more">{t('Подробнее →')}</span>
               </Link>
             ))}
           </div>
           <p className="price-line">
-            Стоимость обучения — <strong>{CONTACTS.price}</strong> по одной программе. Точную стоимость
-            подскажем после бесплатного тестирования.
+            {t('Стоимость обучения')} — <strong>{t(CONTACTS.price)}</strong> {t('по одной программе. Точную стоимость подскажем после бесплатного тестирования.')}
           </p>
         </div>
       </section>
 
       <section className="section">
         <div className="container">
-          <h2 className="section-title">Отзывы наших выпускников</h2>
+          <h2 className="section-title">{t('Отзывы наших выпускников')}</h2>
           <div className="grid grid-2">
             {REVIEWS.map((r) => (
               <figure className="review" key={r.name}>
-                <blockquote>«{r.text}»</blockquote>
-                <figcaption>{r.name}, {r.age}</figcaption>
+                <blockquote>«{t(r.text)}»</blockquote>
+                <figcaption>{r.name}, {t(r.age)}</figcaption>
               </figure>
             ))}
           </div>
@@ -165,10 +165,9 @@ export default function Home() {
 
       <section className="section section-tint" id="zayavka">
         <div className="container form-wrap">
-          <h2 className="section-title">Запишитесь на бесплатное занятие</h2>
+          <h2 className="section-title">{t('Запишитесь на бесплатное занятие')}</h2>
           <p className="section-lead">
-            Оставьте заявку — мы перезвоним в рабочее время ({CONTACTS.hours.toLowerCase()}), подберём
-            программу и пригласим на бесплатное тестирование и пробный урок.
+            {t('Оставьте заявку — мы перезвоним в рабочее время (')}{t(CONTACTS.hours.toLowerCase())}{t('), подберём программу и пригласим на бесплатное тестирование и пробный урок.')}
           </p>
           <EnquiryForm />
         </div>

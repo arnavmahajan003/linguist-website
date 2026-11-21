@@ -3,8 +3,10 @@ import { useLocation } from 'react-router-dom';
 import EnquiryForm from '../components/EnquiryForm';
 import PageTitle from '../components/PageTitle';
 import { CONTACTS } from '../data/content';
+import { useLang } from '../i18n/i18n';
 
 export default function Contacts() {
+  const { t } = useLang();
   const location = useLocation();
   useEffect(() => {
     if (location.hash === '#zayavka') {
@@ -17,8 +19,8 @@ export default function Contacts() {
       <PageTitle title="Контакты" />
       <section className="page-head">
         <div className="container">
-          <h1>Контакты</h1>
-          <p className="section-lead">Удобное расположение в центре Твери — приходите на бесплатное тестирование и пробный урок.</p>
+          <h1>{t('Контакты')}</h1>
+          <p className="section-lead">{t('Удобное расположение в центре Твери — приходите на бесплатное тестирование и пробный урок.')}</p>
         </div>
       </section>
 
@@ -26,13 +28,13 @@ export default function Contacts() {
         <div className="container">
           <div className="grid grid-2">
             <div className="card">
-              <h3>Адрес и режим работы</h3>
+              <h3>{t('Адрес и режим работы')}</h3>
               <ul className="contact-list">
-                <li><strong>Адрес:</strong> {CONTACTS.addressFull}</li>
-                <li><strong>Телефон:</strong> <a href={CONTACTS.phoneHref}>{CONTACTS.phoneDisplay}</a></li>
+                <li><strong>{t('Адрес')}:</strong> {t(CONTACTS.addressFull)}</li>
+                <li><strong>{t('Телефон')}:</strong> <a href={CONTACTS.phoneHref}>{CONTACTS.phoneDisplay}</a></li>
                 <li><strong>Email:</strong> <a href={`mailto:${CONTACTS.email}`}>{CONTACTS.email}</a></li>
-                <li><strong>Режим работы:</strong> {CONTACTS.hours}</li>
-                <li><strong>Занятия:</strong> проводятся согласно расписанию</li>
+                <li><strong>{t('Режим работы')}:</strong> {t(CONTACTS.hours)}</li>
+                <li><strong>{t('Занятия')}:</strong> {t('проводятся согласно расписанию')}</li>
               </ul>
               <p>
                 <a
@@ -41,26 +43,24 @@ export default function Contacts() {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  Открыть в Яндекс Картах
+                  {t('Открыть в Яндекс Картах')}
                 </a>
               </p>
               <p>
-                Мы в соцсетях:{' '}
-                <a href={CONTACTS.vk} target="_blank" rel="noreferrer">ВКонтакте</a>
+                {t('Мы в соцсетях:')}{' '}
+                <a href={CONTACTS.vk} target="_blank" rel="noreferrer">{t('ВКонтакте')}</a>
                 {' · '}
                 <a href={CONTACTS.telegram} target="_blank" rel="noreferrer">Telegram</a>
               </p>
             </div>
             <div className="card">
-              <h3>Для жителей области</h3>
+              <h3>{t('Для жителей области')}</h3>
               <p>
-                Для тех, кто проживает в близлежащих городах Тверской области, предусматриваются курсы
-                выходного дня в любое удобное для вас время.
+                {t('Для тех, кто проживает в близлежащих городах Тверской области, предусматриваются курсы выходного дня в любое удобное для вас время.')}
               </p>
-              <h3>Заявка онлайн</h3>
+              <h3>{t('Заявка онлайн')}</h3>
               <p>
-                Оставьте заявку в форме ниже — перезвоним в рабочее время, ответим на вопросы и запишем
-                на бесплатное занятие.
+                {t('Оставьте заявку в форме ниже — перезвоним в рабочее время, ответим на вопросы и запишем на бесплатное занятие.')}
               </p>
             </div>
           </div>
@@ -69,7 +69,7 @@ export default function Contacts() {
 
       <section className="section section-tint" id="zayavka">
         <div className="container form-wrap">
-          <h2 className="section-title">Оставить заявку</h2>
+          <h2 className="section-title">{t('Оставить заявку')}</h2>
           <EnquiryForm />
         </div>
       </section>
