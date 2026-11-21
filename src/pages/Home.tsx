@@ -297,11 +297,7 @@ const FLIP_WORDS = [
   { front: 'Hello', back: 'Привет', lang: 'English' },
   { front: 'Hallo', back: 'Привет', lang: 'Deutsch' },
   { front: 'Thank you', back: 'Спасибо', lang: 'English' },
-  { front: 'Danke', back: 'Спасибо', lang: 'Deutsch' },
-  { front: 'Goodbye', back: 'До свидания', lang: 'English' },
   { front: 'Guten Morgen', back: 'Доброе утро', lang: 'Deutsch' },
-  { front: 'Please', back: 'Пожалуйста', lang: 'English' },
-  { front: 'Auf Wiedersehen', back: 'До свидания', lang: 'Deutsch' },
 ];
 
 function FlipCard({ front, back, lang }: { front: string; back: string; lang: string }) {
@@ -436,7 +432,7 @@ export default function Home() {
 
       <section className="section">
         <div className="container">
-          <h2 className="section-title">{t('Попробуйте сами')}</h2>
+          <h2 className="section-title">{t('Переверни карточку')}</h2>
           <p className="section-lead flip-hint">{t('Нажмите на карточку, чтобы увидеть перевод')}</p>
           <div className="flip-grid">
             {FLIP_WORDS.map((w) => (

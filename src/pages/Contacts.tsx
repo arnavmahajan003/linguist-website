@@ -1,9 +1,34 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import EnquiryForm from '../components/EnquiryForm';
 import PageTitle from '../components/PageTitle';
 import { CONTACTS } from '../data/content';
 import { useLang } from '../i18n/i18n';
+
+function CopyButton({ value, label }: { value: string; label: string }) {
+  const { t } = useLang();
+  const [copied, setCopied] = useState(false);
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1600);
+    } catch {
+      /* clipboard unavailable */
+    }
+  };
+  return (
+    <>
+      <button type="button" className="copy-btn" onClick={copy} aria-label={`${t('Копировать')}: ${label}`}>
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
+          <rect x="9" y="9" width="11" height="11" rx="2" />
+          <path d="M5 15V6a2 2 0 0 1 2-2h9" />
+        </svg>
+      </button>
+      {copied && <span className="copied-note">{t('Скопировано')}</span>}
+    </>
+  );
+}
 
 export default function Contacts() {
   const { t } = useLang();
@@ -31,8 +56,8 @@ export default function Contacts() {
               <h3>{t('Адрес и режим работы')}</h3>
               <ul className="contact-list">
                 <li><strong>{t('Адрес')}:</strong> {t(CONTACTS.addressFull)}</li>
-                <li><strong>{t('Телефон')}:</strong> <a href={CONTACTS.phoneHref}>{CONTACTS.phoneDisplay}</a></li>
-                <li><strong>Email:</strong> <a href={`mailto:${CONTACTS.email}`}>{CONTACTS.email}</a></li>
+                <li><strong>{t('Телефон')}:</strong> <a href={CONTACTS.phoneHref}>{CONTACTS.phoneDisplay}</a><CopyButton value={CONTACTS.phoneDisplay} label={t('Телефон')} /></li>
+                <li><strong>Email:</strong> <a href={`mailto:${CONTACTS.email}`}>{CONTACTS.email}</a><CopyButton value={CONTACTS.email} label="Email" /></li>
                 <li><strong>{t('Режим работы')}:</strong> {t(CONTACTS.hours)}</li>
                 <li><strong>{t('Занятия')}:</strong> {t('проводятся согласно расписанию')}</li>
               </ul>
@@ -63,6 +88,14 @@ export default function Contacts() {
                 {t('Оставьте заявку в форме ниже — перезвоним в рабочее время, ответим на вопросы и запишем на бесплатное занятие.')}
               </p>
             </div>
+          </div>
+          <div className="card map-card">
+            <iframe
+              className="map-frame"
+              title={t('Карта: проспект Чайковского, 27/32')}
+              src="https://www.openstreetmap.org/export/embed.html?bbox=35.8946%2C56.8404%2C35.9066%2C56.8464&layer=mapnik&marker=56.8434240%2C35.9006378"
+              loading="lazy"
+            />
           </div>
         </div>
       </section>

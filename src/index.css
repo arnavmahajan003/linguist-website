@@ -454,6 +454,46 @@ p { max-width: 68ch; margin: 0 0 16px; }
 .section { padding: 56px 0; border-top: 1px solid var(--border); }
 .section-tint { background: var(--sky); }
 .section-title { margin: 0 0 26px; }
+.section-title::after {
+  content: '';
+  display: block;
+  width: 46px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--sun);
+  margin-top: 12px;
+}
+.section-overlap .section-title::after { display: none; }
+
+/* Subtle dot pattern on tinted sections */
+.section-tint {
+  background-image: radial-gradient(circle, rgba(61, 90, 241, 0.07) 1.2px, transparent 1.4px);
+  background-size: 22px 22px;
+}
+[data-theme="dark"] .section-tint {
+  background-image: radial-gradient(circle, rgba(143, 166, 255, 0.055) 1.2px, transparent 1.4px);
+}
+
+/* Contacts: copy buttons + map */
+.copy-btn {
+  margin-left: 8px;
+  width: 34px; height: 34px;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--muted);
+  cursor: pointer;
+  vertical-align: middle;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.18s ease, transform 0.18s ease;
+}
+.copy-btn:hover { color: var(--ink); }
+.copy-btn:active { transform: scale(0.92); }
+.copied-note { color: #10b981; font-size: 13px; font-weight: 600; margin-left: 8px; }
+.map-card { margin-top: 24px; padding: 12px; }
+.map-frame { width: 100%; height: 320px; border: 0; border-radius: 14px; display: block; }
 .section-lead { font-size: 1.08rem; color: var(--muted); max-width: 62ch; }
 .section-overlap { margin-top: -40px; position: relative; z-index: 3; padding-top: 0; border-top: none; }
 .section-overlap .section-title {
@@ -627,8 +667,8 @@ p { max-width: 68ch; margin: 0 0 16px; }
 .flip-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
-  max-width: 880px;
+  gap: 14px;
+  max-width: 760px;
   margin: 0 auto;
 }
 @media (min-width: 800px) {
@@ -641,7 +681,7 @@ p { max-width: 68ch; margin: 0 0 16px; }
   padding: 0;
   cursor: pointer;
   font: inherit;
-  height: 150px;
+  height: 112px;
   border-radius: var(--radius-lg);
 }
 .flip-inner {
@@ -669,7 +709,7 @@ p { max-width: 68ch; margin: 0 0 16px; }
 }
 .flip-front { background: var(--white); color: var(--ink); }
 .flip-back { background: var(--cobalt); color: #ffffff; transform: rotateY(180deg); border-color: transparent; }
-.flip-word { font-family: var(--font-head); font-weight: 600; font-size: 21px; text-align: center; line-height: 1.25; }
+.flip-word { font-family: var(--font-head); font-weight: 600; font-size: 18px; text-align: center; line-height: 1.25; }
 .flip-lang { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.65; font-weight: 600; }
 
 /* Tactile press feedback on touch devices */
