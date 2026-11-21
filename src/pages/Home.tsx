@@ -274,6 +274,47 @@ function LevelQuiz() {
   );
 }
 
+const FAQ = [
+  {
+    q: 'Сколько стоит обучение?',
+    a: '2400–2700 ₽ в месяц по одной программе. Точную стоимость подскажем после бесплатного тестирования.',
+  },
+  {
+    q: 'Как начать обучение?',
+    a: 'Оставьте заявку на сайте или позвоните нам. Мы пригласим вас на бесплатное тестирование, определим уровень и подберём группу.',
+  },
+  {
+    q: 'Со скольки лет можно заниматься детям?',
+    a: 'Мы занимаемся с детьми с 6 лет. Занятия проходят в игровой форме, с мультимедиа.',
+  },
+  {
+    q: 'Сколько человек в группе?',
+    a: 'В мини-группах от 3 до 5 человек. Также есть индивидуальные занятия и корпоративное обучение.',
+  },
+  {
+    q: 'К каким экзаменам вы готовите?',
+    a: 'Готовим к ОГЭ и ЕГЭ, а также к международным экзаменам Cambridge: YLE, KET, PET и FCE.',
+  },
+  {
+    q: 'Где находится центр?',
+    a: 'г. Тверь, пр-т Чайковского, 27/32, 2 этаж, офис 226.',
+  },
+];
+
+function FaqItem({ q, a, open, onToggle }: { q: string; a: string; open: boolean; onToggle: () => void }) {
+  return (
+    <div className={`faq-item${open ? ' open' : ''}`}>
+      <button type="button" className="faq-q" aria-expanded={open} onClick={onToggle}>
+        <span>{q}</span>
+        <span className="faq-chevron" aria-hidden="true">▾</span>
+      </button>
+      <div className="faq-a">
+        <p>{a}</p>
+      </div>
+    </div>
+  );
+}
+
 type OpenState = 'open' | 'lunch' | 'closed';
 
 function currentOpenState(): OpenState {
@@ -326,6 +367,7 @@ function FlipCard({ front, back, lang }: { front: string; back: string; lang: st
 export default function Home() {
   const { t } = useLang();
   const [greet, setGreet] = useState({ en: 0, de: 0, ru: 0 });
+  const [faqOpen, setFaqOpen] = useState(0);
   const [filter, setFilter] = useState<string>('all');
   const visibleCourses = filter === 'all' ? COURSES : COURSES.filter((c) => c.tags.includes(filter));
   const cycleGreeting = (key: 'en' | 'de' | 'ru') =>
@@ -498,6 +540,23 @@ export default function Home() {
             <button type="button" className="reviews-btn" onClick={() => scrollReviews(1)} aria-label={t('Следующие отзывы')}>
               <span aria-hidden="true">→</span>
             </button>
+          </div>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="container">
+          <h2 className="section-title">{t('Частые вопросы')}</h2>
+          <div className="faq-list">
+            {FAQ.map((item, i) => (
+              <FaqItem
+                key={item.q}
+                q={t(item.q)}
+                a={t(item.a)}
+                open={faqOpen === i}
+                onToggle={() => setFaqOpen(faqOpen === i ? -1 : i)}
+              />
+            ))}
           </div>
         </div>
       </section>

@@ -1,6 +1,35 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CONTACTS } from '../data/content';
 import { useLang } from '../i18n/i18n';
+
+function ShareButton() {
+  const { t } = useLang();
+  const [copied, setCopied] = useState(false);
+  const share = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: document.title, url: window.location.href });
+      } catch {
+        /* user cancelled */
+      }
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1600);
+    } catch {
+      /* clipboard unavailable */
+    }
+  };
+  return (
+    <button type="button" className="share-btn" onClick={share}>
+      {t('Поделиться')}
+      {copied && <span className="copied-note">{t('Скопировано')}</span>}
+    </button>
+  );
+}
 
 export default function Footer() {
   const { t } = useLang();
@@ -17,6 +46,7 @@ export default function Footer() {
             {' · '}
             <a href={CONTACTS.telegram} target="_blank" rel="noreferrer">Telegram</a>
           </p>
+          <ShareButton />
         </div>
         <nav aria-label={t('Навигация в подвале')}>
           <p className="footer-heading">{t('Разделы')}</p>
