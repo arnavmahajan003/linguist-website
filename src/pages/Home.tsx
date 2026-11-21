@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import EnquiryForm from '../components/EnquiryForm';
 import PageTitle from '../components/PageTitle';
@@ -84,8 +84,44 @@ const COURSES = [
   },
 ];
 
+const FLIP_WORDS = [
+  { front: 'Hello', back: 'Привет', lang: 'English' },
+  { front: 'Thank you', back: 'Спасибо', lang: 'English' },
+  { front: 'Hallo', back: 'Привет', lang: 'Deutsch' },
+  { front: 'Guten Morgen', back: 'Доброе утро', lang: 'Deutsch' },
+];
+
+function FlipCard({ front, back, lang }: { front: string; back: string; lang: string }) {
+  const [flipped, setFlipped] = useState(false);
+  return (
+    <button
+      type="button"
+      className={`flip-card${flipped ? ' flipped' : ''}`}
+      onClick={() => setFlipped((v) => !v)}
+      aria-pressed={flipped}
+    >
+      <span className="flip-inner">
+        <span className="flip-face flip-front">
+          <span className="flip-word">{front}</span>
+          <span className="flip-lang">{lang}</span>
+        </span>
+        <span className="flip-face flip-back">
+          <span className="flip-word">{back}</span>
+          <span className="flip-lang">{lang}</span>
+        </span>
+      </span>
+    </button>
+  );
+}
+
 export default function Home() {
   const { t } = useLang();
+  const trackRef = useRef<HTMLDivElement>(null);
+  const scrollReviews = (dir: number) => {
+    const track = trackRef.current;
+    if (!track) return;
+    track.scrollBy({ left: dir * Math.min(track.clientWidth * 0.85, 420), behavior: 'smooth' });
+  };
 
   useEffect(() => {
     if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
@@ -134,26 +170,6 @@ export default function Home() {
           <div className="hero-visual" aria-hidden="true">
             <span className="deco deco-circle-a" />
             <span className="deco deco-square-a" />
-            <svg className="globe" viewBox="0 0 200 200">
-              <defs>
-                <clipPath id="globe-clip"><circle cx="100" cy="100" r="86" /></clipPath>
-                <radialGradient id="globe-fill" cx="35%" cy="30%" r="85%">
-                  <stop offset="0%" stopColor="#5f7cff" stopOpacity="0.45" />
-                  <stop offset="100%" stopColor="#2a45d4" stopOpacity="0.1" />
-                </radialGradient>
-              </defs>
-              <circle cx="100" cy="100" r="86" fill="url(#globe-fill)" />
-              <g clipPath="url(#globe-clip)" className="globe-lines">
-                <ellipse cx="100" cy="100" rx="86" ry="30" />
-                <ellipse cx="100" cy="100" rx="86" ry="58" />
-                <line x1="14" y1="100" x2="186" y2="100" />
-                <ellipse cx="100" cy="100" rx="34" ry="86" className="globe-meridian m1" />
-                <ellipse cx="100" cy="100" rx="34" ry="86" className="globe-meridian m2" />
-                <ellipse cx="100" cy="100" rx="34" ry="86" className="globe-meridian m3" />
-              </g>
-              <circle cx="100" cy="100" r="86" className="globe-outline" />
-              <circle cx="100" cy="100" r="97" className="globe-orbit" />
-            </svg>
             <div className="bubble bubble-hello">Hello</div>
             <div className="bubble bubble-hallo">Hallo</div>
             <div className="bubble bubble-privet">Привет</div>
@@ -171,6 +187,18 @@ export default function Home() {
                 <h3>{t(a.title)}</h3>
                 <p>{t(a.text)}</p>
               </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="container">
+          <h2 className="section-title">{t('Попробуйте сами')}</h2>
+          <p className="section-lead flip-hint">{t('Нажмите на карточку, чтобы увидеть перевод')}</p>
+          <div className="flip-grid">
+            {FLIP_WORDS.map((w) => (
+              <FlipCard key={w.front} front={w.front} back={w.back} lang={w.lang} />
             ))}
           </div>
         </div>
@@ -197,13 +225,21 @@ export default function Home() {
       <section className="section">
         <div className="container">
           <h2 className="section-title">{t('Отзывы наших выпускников')}</h2>
-          <div className="grid grid-2">
+          <div className="reviews-track" ref={trackRef}>
             {REVIEWS.map((r) => (
               <figure className="review" key={r.name}>
                 <blockquote>«{t(r.text)}»</blockquote>
                 <figcaption>{r.name}, {t(r.age)}</figcaption>
               </figure>
             ))}
+          </div>
+          <div className="reviews-nav">
+            <button type="button" className="reviews-btn" onClick={() => scrollReviews(-1)} aria-label={t('Предыдущие отзывы')}>
+              <span aria-hidden="true">←</span>
+            </button>
+            <button type="button" className="reviews-btn" onClick={() => scrollReviews(1)} aria-label={t('Следующие отзывы')}>
+              <span aria-hidden="true">→</span>
+            </button>
           </div>
         </div>
       </section>

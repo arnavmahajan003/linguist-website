@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { BrowserRouter, Link, Route, Routes, useLocation } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -117,6 +117,53 @@ function MotionManager() {
   return null;
 }
 
+function PageChrome() {
+  const { t } = useLang();
+  const barRef = useRef<HTMLDivElement>(null);
+  const [showTop, setShowTop] = useState(false);
+
+  useEffect(() => {
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const y = window.scrollY;
+      if (barRef.current) {
+        barRef.current.style.transform = `scaleX(${max > 0 ? Math.min(y / max, 1) : 0})`;
+      }
+      setShowTop(y > 600);
+    };
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        window.requestAnimationFrame(update);
+      }
+    };
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, []);
+
+  return (
+    <>
+      <div className="scroll-progress" ref={barRef} aria-hidden="true" />
+      <button
+        type="button"
+        className={`to-top${showTop ? ' visible' : ''}`}
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        aria-label={t('Наверх')}
+        tabIndex={showTop ? 0 : -1}
+      >
+        <span aria-hidden="true">↑</span>
+      </button>
+    </>
+  );
+}
+
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
   useEffect(() => {
@@ -149,6 +196,7 @@ export default function App() {
       </main>
       <Footer />
       <StickyCta />
+      <PageChrome />
     </BrowserRouter>
     </LanguageProvider>
   );

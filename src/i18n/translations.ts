@@ -946,4 +946,25 @@ fr[SEG3] = ". L'admission se fait selon les résultats du";
 fr['бесплатного тестирования'] = 'test de niveau gratuit';
 fr['.'] = '.';
 
+en['Попробуйте сами'] = 'Try it yourself';
+zh['Попробуйте сами'] = '自己试一试';
+de['Попробуйте сами'] = 'Probieren Sie es selbst';
+fr['Попробуйте сами'] = 'Essayez vous-même';
+en['Нажмите на карточку, чтобы увидеть перевод'] = 'Tap a card to see the translation';
+zh['Нажмите на карточку, чтобы увидеть перевод'] = '点按卡片查看翻译';
+de['Нажмите на карточку, чтобы увидеть перевод'] = 'Tippen Sie auf eine Karte, um die Übersetzung zu sehen';
+fr['Нажмите на карточку, чтобы увидеть перевод'] = 'Touchez une carte pour voir la traduction';
+en['Предыдущие отзывы'] = 'Previous reviews';
+zh['Предыдущие отзывы'] = '上一组评价';
+de['Предыдущие отзывы'] = 'Vorherige Bewertungen';
+fr['Предыдущие отзывы'] = 'Avis précédents';
+en['Следующие отзывы'] = 'Next reviews';
+zh['Следующие отзывы'] = '下一组评价';
+de['Следующие отзывы'] = 'Nächste Bewertungen';
+fr['Следующие отзывы'] = 'Avis suivants';
+en['Наверх'] = 'Back to top';
+zh['Наверх'] = '回到顶部';
+de['Наверх'] = 'Nach oben';
+fr['Наверх'] = 'Haut de page';
+
 export const DICTS: Record<Exclude<Lang, 'ru'>, Record<string, string>> = { en, zh, de, fr };

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { CONTACTS } from '../data/content';
 import { LANGS, useLang, type Lang } from '../i18n/i18n';
@@ -24,8 +24,33 @@ function initialTheme(): Theme {
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const [theme, setTheme] = useState<Theme>(initialTheme);
   const { lang, setLang, t } = useLang();
+  const headerRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 12);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+    const onDown = (e: PointerEvent) => {
+      if (headerRef.current && !headerRef.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener('keydown', onKey);
+    document.addEventListener('pointerdown', onDown);
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('pointerdown', onDown);
+    };
+  }, [open ]);
 
   const toggleTheme = () => {
     const next: Theme = theme === 'dark' ? 'light' : 'dark';
@@ -39,7 +64,7 @@ export default function Header() {
   };
 
   return (
-    <header className="header">
+    <header className={`header${scrolled ? ' header-scrolled' : ''}`} ref={headerRef}>
       <div className="container header-inner">
         <Link to="/" className="logo" aria-label={t('Языковой центр «Лингвист» — на главную')}>
           <span className="logo-mark" aria-hidden="true">Л</span>

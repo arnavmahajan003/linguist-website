@@ -96,6 +96,42 @@ p { max-width: 68ch; margin: 0 0 16px; }
   padding-top: 8px;
   padding-bottom: 8px;
   flex-wrap: nowrap;
+  transition: min-height 0.25s ease, padding 0.25s ease;
+}
+.header-scrolled .header-inner { min-height: 54px; padding-top: 4px; padding-bottom: 4px; }
+
+/* Scroll progress + back-to-top */
+.scroll-progress {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--cobalt);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  z-index: 120;
+  pointer-events: none;
+}
+.to-top {
+  position: fixed;
+  right: 16px;
+  bottom: 24px;
+  z-index: 90;
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--white);
+  color: var(--ink);
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.to-top.visible { opacity: 1; pointer-events: auto; transform: none; }
+@media (max-width: 680px) {
+  .to-top { bottom: 108px; }
 }
 .logo { display: flex; align-items: center; gap: 11px; text-decoration: none; min-width: 0; }
 .logo-mark {
@@ -317,54 +353,6 @@ p { max-width: 68ch; margin: 0 0 16px; }
 /* Hero visual — stacked greeting bubbles over sun + cobalt shapes */
 .hero-visual { position: relative; min-height: 300px; z-index: 1; transition: transform 0.35s ease-out; }
 
-/* Rotating globe (pure SVG/CSS — no libraries) */
-.globe {
-  position: absolute;
-  width: 300px; height: 300px;
-  right: 0;
-  top: 26px;
-  z-index: 1;
-  animation: globe-float 7s ease-in-out infinite;
-}
-@keyframes globe-float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-12px); }
-}
-.globe-lines ellipse, .globe-lines line {
-  fill: none;
-  stroke: rgba(42, 69, 212, 0.45);
-  stroke-width: 1.4;
-}
-.globe-outline { fill: none; stroke: rgba(42, 69, 212, 0.55); stroke-width: 1.6; }
-.globe-orbit {
-  fill: none;
-  stroke: rgba(42, 69, 212, 0.3);
-  stroke-width: 1.4;
-  stroke-dasharray: 4 9;
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: orbit-spin 46s linear infinite;
-}
-@keyframes orbit-spin {
-  to { transform: rotate(360deg); }
-}
-.globe-meridian {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: meridian-spin 5.4s linear infinite;
-}
-.globe-meridian.m2 { animation-delay: -1.8s; }
-.globe-meridian.m3 { animation-delay: -3.6s; }
-@keyframes meridian-spin {
-  0% { transform: scaleX(1); }
-  25% { transform: scaleX(0); }
-  50% { transform: scaleX(-1); }
-  75% { transform: scaleX(0); }
-  100% { transform: scaleX(1); }
-}
-[data-theme="dark"] .globe-lines ellipse, [data-theme="dark"] .globe-lines line { stroke: rgba(143, 166, 255, 0.5); }
-[data-theme="dark"] .globe-outline { stroke: rgba(143, 166, 255, 0.6); }
-[data-theme="dark"] .globe-orbit { stroke: rgba(143, 166, 255, 0.35); }
 .hero-visual::before {
   content: '';
   position: absolute;
@@ -602,6 +590,95 @@ p { max-width: 68ch; margin: 0 0 16px; }
 }
 .review figcaption { color: var(--ink); font-weight: 700; }
 
+/* Reviews — swipeable carousel */
+.reviews-track {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding: 6px 2px 28px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.reviews-track::-webkit-scrollbar { display: none; }
+.reviews-track .review { flex: 0 0 86%; scroll-snap-align: start; }
+@media (min-width: 700px) {
+  .reviews-track .review { flex-basis: 47%; }
+}
+@media (min-width: 1024px) {
+  .reviews-track .review { flex-basis: 31.8%; }
+}
+.reviews-nav { display: flex; gap: 10px; justify-content: center; }
+.reviews-btn {
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  color: var(--ink);
+  font-size: 19px;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.18s ease, background 0.18s ease;
+}
+.reviews-btn:hover { background: var(--card-important); }
+.reviews-btn:active { transform: scale(0.93); }
+
+/* Flip cards — tap to see the translation */
+.flip-hint { margin: 0 auto 26px; text-align: center; }
+.flip-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  max-width: 880px;
+  margin: 0 auto;
+}
+@media (min-width: 800px) {
+  .flip-grid { grid-template-columns: repeat(4, 1fr); }
+}
+.flip-card {
+  perspective: 800px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font: inherit;
+  height: 150px;
+  border-radius: var(--radius-lg);
+}
+.flip-inner {
+  position: relative;
+  display: block;
+  width: 100%; height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.45s cubic-bezier(0.3, 0.7, 0.3, 1);
+}
+.flip-card.flipped .flip-inner { transform: rotateY(180deg); }
+.flip-face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  padding: 16px;
+  box-shadow: var(--card-shadow);
+}
+.flip-front { background: var(--white); color: var(--ink); }
+.flip-back { background: var(--cobalt); color: #ffffff; transform: rotateY(180deg); border-color: transparent; }
+.flip-word { font-family: var(--font-head); font-weight: 600; font-size: 21px; text-align: center; line-height: 1.25; }
+.flip-lang { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.65; font-weight: 600; }
+
+/* Tactile press feedback on touch devices */
+@media (hover: none) {
+  .card:active { transform: scale(0.98); }
+}
+
 /* Prose pages */
 .prose { max-width: 780px; }
 .prose h2 { margin-top: 38px; }
@@ -770,7 +847,6 @@ p { max-width: 68ch; margin: 0 0 16px; }
   .hero-visual { min-height: 360px; }
   .courses-grid .card { min-height: 235px; }
   .form-wrap { padding: 36px 36px 30px; }
-  .grid-2 .review:nth-child(even) { margin-top: 16px; }
 }
 
 @media (min-width: 901px) {
@@ -790,7 +866,6 @@ p { max-width: 68ch; margin: 0 0 16px; }
   .hero-visual { min-height: 290px; max-width: 430px; }
   .hero-visual::before { width: 210px; height: 210px; }
   .hero-visual::after { width: 240px; height: 240px; }
-  .globe { width: 228px; height: 228px; top: 34px; }
   .bubble-privet { top: 178px; }
 }
 @media (max-width: 680px) {
@@ -891,4 +966,5 @@ p { max-width: 68ch; margin: 0 0 16px; }
     transition-duration: 0.01ms !important;
   }
   html { scroll-behavior: auto; }
+  .reviews-track { scroll-behavior: auto; }
 }
