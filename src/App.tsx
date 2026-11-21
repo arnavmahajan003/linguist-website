@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter, Link, Route, Routes, useLocation } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -12,6 +12,14 @@ import Contacts from './pages/Contacts';
 import Privacy from './pages/Privacy';
 import Admin from './pages/Admin';
 import NotFound from './pages/NotFound';
+
+function StickyCta() {
+  const { pathname } = useLocation();
+  if (pathname === '/kontakty' || pathname === '/admin') return null;
+  return (
+    <Link className="sticky-cta" to="/kontakty#zayavka">Бесплатное занятие</Link>
+  );
+}
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
@@ -42,6 +50,7 @@ export default function App() {
         </Routes>
       </main>
       <Footer />
+      <StickyCta />
     </BrowserRouter>
   );
 }
