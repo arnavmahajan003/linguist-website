@@ -56,33 +56,166 @@ const COURSES = [
     to: '/kursy',
     title: 'Английский язык',
     text: 'Шесть уровней — от Beginner до Advanced. Группы и индивидуальные занятия для детей и взрослых.',
+    tags: ['adults', 'exams'],
   },
   {
     to: '/kursy',
     title: 'Немецкий язык',
     text: 'Три уровня подготовки — начальный, средний и продвинутый. Подготовка к ОГЭ и ЕГЭ.',
+    tags: ['adults', 'exams'],
   },
   {
     to: '/kursy',
     title: 'Русский язык',
     text: 'Подготовка к ОГЭ и ЕГЭ, итоговое сочинение, развитие речи, помощь школьникам 1–11 классов.',
+    tags: ['kids', 'exams'],
   },
   {
     to: '/detyam',
     title: 'Детям',
     text: 'Занятия с 6 лет в игровой форме, мультимедиа, экзамены Cambridge YLE, KET, PET и FCE.',
+    tags: ['kids'],
   },
   {
     to: '/vzroslym',
     title: 'Взрослым',
     text: 'Разговорный и деловой английский, корпоративное обучение, занятия с носителями языка.',
+    tags: ['adults'],
   },
   {
     to: '/vzroslym',
     title: 'Образовательные поездки',
     text: 'Обучающие курсы и поездки: английский в Турции (Анталия), ОАЭ (Дубай) и Китае с носителями языка.',
+    tags: ['kids', 'adults'],
   },
 ];
+
+const COURSE_FILTERS = [
+  { id: 'all', label: 'Все' },
+  { id: 'kids', label: 'Детям' },
+  { id: 'adults', label: 'Взрослым' },
+  { id: 'exams', label: 'Экзамены' },
+] as const;
+
+const GREETINGS = {
+  en: ['Hello', 'Hi', 'Hey'],
+  de: ['Hallo', 'Guten Tag', 'Willkommen'],
+  ru: ['Привет', 'Здравствуйте', 'Добрый день'],
+};
+
+const QUIZ = [
+  { q: 'She ___ to school every day.', options: ['go', 'goes', 'going'], answer: 1 },
+  { q: 'I have lived in Tver ___ 2020.', options: ['for', 'since', 'at'], answer: 1 },
+  { q: 'If it rains tomorrow, we ___ at home.', options: ['stays', 'will stay', 'stayed'], answer: 1 },
+];
+
+function Stat({ value, prefix, label, count }: { value: number; prefix?: string; label: string; count?: boolean }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const render = (v: number) => {
+      el.textContent = `${prefix ?? ''}${v}`;
+    };
+    if (!count || window.matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) {
+      render(value);
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (!entries[0].isIntersecting) return;
+        io.disconnect();
+        const start = performance.now();
+        const duration = 900;
+        const tick = (now: number) => {
+          const p = Math.min((now - start) / duration, 1);
+          render(Math.round(value * (1 - Math.pow(1 - p, 3))));
+          if (p < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      },
+      { threshold: 0.4 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [value, prefix, count]);
+  return (
+    <div className="stat">
+      <span className="stat-num" ref={ref}>{prefix}{value}</span>
+      <span className="stat-label">{label}</span>
+    </div>
+  );
+}
+
+function LevelQuiz() {
+  const { t } = useLang();
+  const [step, setStep] = useState(0);
+  const [picked, setPicked] = useState<number | null>(null);
+  const [score, setScore] = useState(0);
+  const done = step >= QUIZ.length;
+
+  const pick = (i: number) => {
+    if (picked !== null || done) return;
+    setPicked(i);
+    if (i === QUIZ[step].answer) setScore((s) => s + 1);
+    window.setTimeout(() => {
+      setStep((s) => s + 1);
+      setPicked(null);
+    }, 1100);
+  };
+
+  const reset = () => {
+    setStep(0);
+    setScore(0);
+    setPicked(null);
+  };
+
+  return (
+    <div className="quiz-card">
+      <div className="quiz-dots" aria-hidden="true">
+        {QUIZ.map((_, i) => (
+          <span key={i} className={`quiz-dot${i < step ? ' done' : ''}`} />
+        ))}
+      </div>
+      {done ? (
+        <div className="quiz-result">
+          <p className="quiz-score">{t('Ваш результат:')} {score} / {QUIZ.length}</p>
+          <p className="section-lead quiz-note">{t('Точный уровень мы определим на бесплатном тестировании.')}</p>
+          <div className="hero-actions quiz-actions">
+            <Link className="btn btn-primary" to="/kontakty#zayavka">{t('Записаться на бесплатное занятие')}</Link>
+            <button type="button" className="btn btn-ghost" onClick={reset}>{t('Пройти ещё раз')}</button>
+          </div>
+        </div>
+      ) : (
+        <>
+          <p className="quiz-q">{QUIZ[step].q}</p>
+          <div className="quiz-opts">
+            {QUIZ[step].options.map((opt, i) => {
+              const cls = picked === null
+                ? ''
+                : i === QUIZ[step].answer
+                  ? ' correct'
+                  : i === picked
+                    ? ' wrong'
+                    : ' dim';
+              return (
+                <button
+                  key={opt}
+                  type="button"
+                  className={`quiz-opt${cls}`}
+                  onClick={() => pick(i)}
+                  disabled={picked !== null}
+                >
+                  {opt}
+                </button>
+              );
+            })}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
 
 const FLIP_WORDS = [
   { front: 'Hello', back: 'Привет', lang: 'English' },
@@ -116,6 +249,11 @@ function FlipCard({ front, back, lang }: { front: string; back: string; lang: st
 
 export default function Home() {
   const { t } = useLang();
+  const [greet, setGreet] = useState({ en: 0, de: 0, ru: 0 });
+  const [filter, setFilter] = useState<string>('all');
+  const visibleCourses = filter === 'all' ? COURSES : COURSES.filter((c) => c.tags.includes(filter));
+  const cycleGreeting = (key: 'en' | 'de' | 'ru') =>
+    setGreet((g) => ({ ...g, [key]: (g[key] + 1) % GREETINGS[key].length }));
   const trackRef = useRef<HTMLDivElement>(null);
   const scrollReviews = (dir: number) => {
     const track = trackRef.current;
@@ -170,9 +308,15 @@ export default function Home() {
           <div className="hero-visual" aria-hidden="true">
             <span className="deco deco-circle-a" />
             <span className="deco deco-square-a" />
-            <div className="bubble bubble-hello">Hello</div>
-            <div className="bubble bubble-hallo">Hallo</div>
-            <div className="bubble bubble-privet">Привет</div>
+            <div className="bubble bubble-hello" onClick={() => cycleGreeting('en')}>
+              <span className="bubble-word" key={greet.en}>{GREETINGS.en[greet.en]}</span>
+            </div>
+            <div className="bubble bubble-hallo" onClick={() => cycleGreeting('de')}>
+              <span className="bubble-word" key={greet.de}>{GREETINGS.de[greet.de]}</span>
+            </div>
+            <div className="bubble bubble-privet" onClick={() => cycleGreeting('ru')}>
+              <span className="bubble-word" key={greet.ru}>{GREETINGS.ru[greet.ru]}</span>
+            </div>
           </div>
         </div>
       </section>
@@ -192,6 +336,15 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="section section-tint stats-band">
+        <div className="container stats-grid">
+          <Stat value={2011} label={t('год основания центра')} />
+          <Stat value={6} count label={t('уровней английского языка')} />
+          <Stat value={5} count prefix="3–" label={t('человека в мини-группе')} />
+          <Stat value={2} count label={t('первых занятия — бесплатно')} />
+        </div>
+      </section>
+
       <section className="section">
         <div className="container">
           <h2 className="section-title">{t('Попробуйте сами')}</h2>
@@ -207,8 +360,21 @@ export default function Home() {
       <section className="section section-tint">
         <div className="container">
           <h2 className="section-title">{t('Наши курсы')}</h2>
+          <div className="chips" role="group">
+            {COURSE_FILTERS.map((f) => (
+              <button
+                key={f.id}
+                type="button"
+                className={`chip${filter === f.id ? ' chip-active' : ''}`}
+                onClick={() => setFilter(f.id)}
+                aria-pressed={filter === f.id}
+              >
+                {t(f.label)}
+              </button>
+            ))}
+          </div>
           <div className="grid grid-3 courses-grid">
-            {COURSES.map((c) => (
+            {visibleCourses.map((c) => (
               <Link className="card card-link" to={c.to} key={c.title}>
                 <h3>{t(c.title)}</h3>
                 <p>{t(c.text)}</p>
@@ -219,6 +385,13 @@ export default function Home() {
           <p className="price-line">
             {t('Стоимость обучения')} — <strong>{t(CONTACTS.price)}</strong> {t('по одной программе. Точную стоимость подскажем после бесплатного тестирования.')}
           </p>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="container">
+          <h2 className="section-title">{t('Мини-тест: проверьте свой уровень')}</h2>
+          <LevelQuiz />
         </div>
       </section>
 
