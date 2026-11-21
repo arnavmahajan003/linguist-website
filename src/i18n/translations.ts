@@ -1006,5 +1006,17 @@ en['первых занятия — бесплатно'] = 'first lessons free';
 zh['первых занятия — бесплатно'] = '节课免费';
 de['первых занятия — бесплатно'] = 'erste Stunden kostenlos';
 fr['первых занятия — бесплатно'] = 'premiers cours gratuits';
+en['Сейчас открыто'] = 'Open now';
+zh['Сейчас открыто'] = '现在营业';
+de['Сейчас открыто'] = 'Jetzt geöffnet';
+fr['Сейчас открыто'] = 'Ouvert maintenant';
+en['Сейчас закрыто'] = 'Closed now';
+zh['Сейчас закрыто'] = '现在休息';
+de['Сейчас закрыто'] = 'Jetzt geschlossen';
+fr['Сейчас закрыто'] = 'Fermé actuellement';
+en['Обеденный перерыв'] = 'Lunch break';
+zh['Обеденный перерыв'] = '午休时间';
+de['Обеденный перерыв'] = 'Mittagspause';
+fr['Обеденный перерыв'] = 'Pause déjeuner';
 
 export const DICTS: Record<Exclude<Lang, 'ru'>, Record<string, string>> = { en, zh, de, fr };

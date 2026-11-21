@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { BrowserRouter, Link, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -13,36 +13,6 @@ import Privacy from './pages/Privacy';
 import Admin from './pages/Admin';
 import NotFound from './pages/NotFound';
 import { LanguageProvider, useLang } from './i18n/i18n';
-
-function StickyCta() {
-  const { pathname } = useLocation();
-  const { t } = useLang();
-  const [blocked, setBlocked] = useState(false);
-
-  useEffect(() => {
-    const targets: Element[] = [];
-    const formSection = document.getElementById('zayavka');
-    if (formSection) targets.push(formSection);
-    const footer = document.querySelector('footer');
-    if (footer) targets.push(footer);
-    if (targets.length === 0) return;
-    const visible = new Set<Element>();
-    const io = new IntersectionObserver((entries) => {
-      for (const entry of entries) {
-        if (entry.isIntersecting) visible.add(entry.target);
-        else visible.delete(entry.target);
-      }
-      setBlocked(visible.size > 0);
-    });
-    targets.forEach((el) => io.observe(el));
-    return () => io.disconnect();
-  }, [pathname]);
-
-  if (pathname === '/kontakty' || pathname === '/admin' || blocked) return null;
-  return (
-    <Link className="sticky-cta" to="/kontakty#zayavka">{t('Бесплатное занятие')}</Link>
-  );
-}
 
 function SkipLink() {
   const { t } = useLang();
@@ -195,7 +165,6 @@ export default function App() {
         </Routes>
       </main>
       <Footer />
-      <StickyCta />
       <PageChrome />
     </BrowserRouter>
     </LanguageProvider>

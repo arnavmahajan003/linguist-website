@@ -130,9 +130,7 @@ p { max-width: 68ch; margin: 0 0 16px; }
   transition: opacity 0.25s ease, transform 0.25s ease;
 }
 .to-top.visible { opacity: 1; pointer-events: auto; transform: none; }
-@media (max-width: 680px) {
-  .to-top { bottom: 108px; }
-}
+
 .logo { display: flex; align-items: center; gap: 11px; text-decoration: none; min-width: 0; }
 .logo-mark {
   position: relative;
@@ -732,6 +730,26 @@ p { max-width: 68ch; margin: 0 0 16px; }
 .chip:active { transform: scale(0.96); }
 .chip-active { background: var(--cobalt); color: #ffffff; border-color: transparent; }
 
+/* Live open/closed status */
+.open-status {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 18px 0 0;
+  color: var(--muted);
+  font-size: 15px;
+  font-weight: 600;
+}
+.status-dot { width: 10px; height: 10px; border-radius: 50%; background: #f43f5e; flex: none; }
+.status-dot.open { background: #10b981; animation: pulse-dot 2.2s ease-out infinite; }
+.status-dot.lunch { background: var(--sun); }
+@keyframes pulse-dot {
+  0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.45); }
+  70% { box-shadow: 0 0 0 9px rgba(16, 185, 129, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+.quiz-tabs { justify-content: center; max-width: 640px; margin: 0 auto 18px; }
+
 /* Mini level test */
 .quiz-card {
   max-width: 640px;
@@ -921,9 +939,6 @@ p { max-width: 68ch; margin: 0 0 16px; }
 .footer-bottom p { margin: 0; }
 .footer-bottom a { min-height: 44px; }
 
-/* Sticky mobile CTA */
-.sticky-cta { display: none; }
-
 /* ---------- Desktop scale-up ---------- */
 @media (min-width: 681px) {
   .grid-3 { grid-template-columns: repeat(3, 1fr); }
@@ -959,40 +974,10 @@ p { max-width: 68ch; margin: 0 0 16px; }
   .bubble-privet { top: 178px; }
 }
 @media (max-width: 680px) {
-  body { font-size: 16.5px; padding-bottom: 96px; }
+  body { font-size: 16.5px; }
   .hero { padding: 42px 0 54px; }
   .hero-actions .btn { flex: 1 1 100%; }
   .section-overlap { margin-top: -34px; }
-  .sticky-cta {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    position: fixed;
-    left: 16px;
-    right: 16px;
-    bottom: calc(12px + env(safe-area-inset-bottom));
-    z-index: 60;
-    min-height: 54px;
-    border-radius: var(--radius);
-    background: var(--cobalt);
-    color: #fff;
-    font-weight: 600;
-    font-size: 16px;
-    text-decoration: none;
-    box-shadow: 0 4px 0 var(--cobalt-deep), 0 18px 34px rgba(0, 0, 0, 0.35);
-  }
-  .sticky-cta::before {
-    content: '';
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 112px;
-    background: linear-gradient(transparent, var(--bg) 68%);
-    z-index: -1;
-    pointer-events: none;
-  }
-  .sticky-cta:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--cobalt-deep), 0 10px 20px rgba(0, 0, 0, 0.3); }
 }
 
 /* ---------- Dark theme (default) ---------- */

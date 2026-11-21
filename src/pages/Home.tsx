@@ -103,11 +103,40 @@ const GREETINGS = {
   ru: ['Привет', 'Здравствуйте', 'Добрый день'],
 };
 
-const QUIZ = [
-  { q: 'She ___ to school every day.', options: ['go', 'goes', 'going'], answer: 1 },
-  { q: 'I have lived in Tver ___ 2020.', options: ['for', 'since', 'at'], answer: 1 },
-  { q: 'If it rains tomorrow, we ___ at home.', options: ['stays', 'will stay', 'stayed'], answer: 1 },
-];
+type QuizSetId = 'en' | 'de' | 'ru';
+
+const QUIZZES: Record<QuizSetId, { label: string; questions: { q: string; options: string[]; answer: number }[] }> = {
+  en: {
+    label: 'Английский язык',
+    questions: [
+      { q: 'She ___ to school every day.', options: ['go', 'goes', 'going'], answer: 1 },
+      { q: 'I have lived in Tver ___ 2020.', options: ['for', 'since', 'at'], answer: 1 },
+      { q: 'They ___ playing football now.', options: ['is', 'are', 'am'], answer: 1 },
+      { q: 'He ___ a book yesterday.', options: ['reads', 'read', 'reading'], answer: 1 },
+      { q: 'If it rains tomorrow, we ___ at home.', options: ['stays', 'will stay', 'stayed'], answer: 1 },
+    ],
+  },
+  de: {
+    label: 'Немецкий язык',
+    questions: [
+      { q: 'Ich ___ aus Tver.', options: ['kommst', 'komme', 'kommen'], answer: 1 },
+      { q: 'Wir ___ Deutsch.', options: ['lernt', 'lernen', 'lerne'], answer: 1 },
+      { q: 'Das ist ___ Buch.', options: ['meine', 'mein', 'meiner'], answer: 1 },
+      { q: 'Er ___ einen Hund.', options: ['hast', 'hat', 'haben'], answer: 1 },
+      { q: '___ alt bist du?', options: ['Was', 'Wer', 'Wie'], answer: 2 },
+    ],
+  },
+  ru: {
+    label: 'Русский язык',
+    questions: [
+      { q: 'Я ___ в Твери.', options: ['живёшь', 'живёт', 'живу'], answer: 2 },
+      { q: 'Она ___ русский язык.', options: ['изучаю', 'изучает', 'изучаем'], answer: 1 },
+      { q: 'Мы ___ в школу.', options: ['идёт', 'иду', 'идём'], answer: 2 },
+      { q: 'Это моя ___ .', options: ['книгу', 'книга', 'книги'], answer: 1 },
+      { q: 'Дети ___ в парке.', options: ['играет', 'играю', 'играют'], answer: 2 },
+    ],
+  },
+};
 
 function Stat({ value, prefix, label, count }: { value: number; prefix?: string; label: string; count?: boolean }) {
   const ref = useRef<HTMLSpanElement>(null);
@@ -148,16 +177,29 @@ function Stat({ value, prefix, label, count }: { value: number; prefix?: string;
 }
 
 function LevelQuiz() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
+  const defaultSet: QuizSetId = lang === 'en' ? 'ru' : lang === 'de' ? 'de' : 'en';
+  const [setId, setSetId] = useState<QuizSetId>(defaultSet);
   const [step, setStep] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
   const [score, setScore] = useState(0);
-  const done = step >= QUIZ.length;
+  const questions = QUIZZES[setId].questions;
+  const done = step >= questions.length;
+
+  useEffect(() => {
+    setSetId(defaultSet);
+  }, [defaultSet]);
+
+  useEffect(() => {
+    setStep(0);
+    setScore(0);
+    setPicked(null);
+  }, [setId]);
 
   const pick = (i: number) => {
     if (picked !== null || done) return;
     setPicked(i);
-    if (i === QUIZ[step].answer) setScore((s) => s + 1);
+    if (i === questions[step].answer) setScore((s) => s + 1);
     window.setTimeout(() => {
       setStep((s) => s + 1);
       setPicked(null);
@@ -171,57 +213,95 @@ function LevelQuiz() {
   };
 
   return (
-    <div className="quiz-card">
-      <div className="quiz-dots" aria-hidden="true">
-        {QUIZ.map((_, i) => (
-          <span key={i} className={`quiz-dot${i < step ? ' done' : ''}`} />
+    <>
+      <div className="chips quiz-tabs" role="group">
+        {(Object.keys(QUIZZES) as QuizSetId[]).map((id) => (
+          <button
+            key={id}
+            type="button"
+            className={`chip${setId === id ? ' chip-active' : ''}`}
+            onClick={() => setSetId(id)}
+            aria-pressed={setId === id}
+          >
+            {t(QUIZZES[id].label)}
+          </button>
         ))}
       </div>
-      {done ? (
-        <div className="quiz-result">
-          <p className="quiz-score">{t('Ваш результат:')} {score} / {QUIZ.length}</p>
-          <p className="section-lead quiz-note">{t('Точный уровень мы определим на бесплатном тестировании.')}</p>
-          <div className="hero-actions quiz-actions">
-            <Link className="btn btn-primary" to="/kontakty#zayavka">{t('Записаться на бесплатное занятие')}</Link>
-            <button type="button" className="btn btn-ghost" onClick={reset}>{t('Пройти ещё раз')}</button>
-          </div>
+      <div className="quiz-card">
+        <div className="quiz-dots" aria-hidden="true">
+          {questions.map((_, i) => (
+            <span key={i} className={`quiz-dot${i < step ? ' done' : ''}`} />
+          ))}
         </div>
-      ) : (
-        <>
-          <p className="quiz-q">{QUIZ[step].q}</p>
-          <div className="quiz-opts">
-            {QUIZ[step].options.map((opt, i) => {
-              const cls = picked === null
-                ? ''
-                : i === QUIZ[step].answer
-                  ? ' correct'
-                  : i === picked
-                    ? ' wrong'
-                    : ' dim';
-              return (
-                <button
-                  key={opt}
-                  type="button"
-                  className={`quiz-opt${cls}`}
-                  onClick={() => pick(i)}
-                  disabled={picked !== null}
-                >
-                  {opt}
-                </button>
-              );
-            })}
+        {done ? (
+          <div className="quiz-result">
+            <p className="quiz-score">{t('Ваш результат:')} {score} / {questions.length}</p>
+            <p className="section-lead quiz-note">{t('Точный уровень мы определим на бесплатном тестировании.')}</p>
+            <div className="hero-actions quiz-actions">
+              <Link className="btn btn-primary" to="/kontakty#zayavka">{t('Записаться на бесплатное занятие')}</Link>
+              <button type="button" className="btn btn-ghost" onClick={reset}>{t('Пройти ещё раз')}</button>
+            </div>
           </div>
-        </>
-      )}
-    </div>
+        ) : (
+          <>
+            <p className="quiz-q">{questions[step].q}</p>
+            <div className="quiz-opts">
+              {questions[step].options.map((opt, i) => {
+                const cls = picked === null
+                  ? ''
+                  : i === questions[step].answer
+                    ? ' correct'
+                    : i === picked
+                      ? ' wrong'
+                      : ' dim';
+                return (
+                  <button
+                    key={opt}
+                    type="button"
+                    className={`quiz-opt${cls}`}
+                    onClick={() => pick(i)}
+                    disabled={picked !== null}
+                  >
+                    {opt}
+                  </button>
+                );
+              })}
+            </div>
+          </>
+        )}
+      </div>
+    </>
   );
+}
+
+type OpenState = 'open' | 'lunch' | 'closed';
+
+function currentOpenState(): OpenState {
+  const parts = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Europe/Moscow',
+    weekday: 'short',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).formatToParts(new Date());
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? '';
+  const workday = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].includes(get('weekday'));
+  const mins = parseInt(get('hour'), 10) * 60 + parseInt(get('minute'), 10);
+  if (!workday) return 'closed';
+  if (mins >= 780 && mins < 840) return 'lunch';
+  if (mins >= 600 && mins < 1140) return 'open';
+  return 'closed';
 }
 
 const FLIP_WORDS = [
   { front: 'Hello', back: 'Привет', lang: 'English' },
-  { front: 'Thank you', back: 'Спасибо', lang: 'English' },
   { front: 'Hallo', back: 'Привет', lang: 'Deutsch' },
+  { front: 'Thank you', back: 'Спасибо', lang: 'English' },
+  { front: 'Danke', back: 'Спасибо', lang: 'Deutsch' },
+  { front: 'Goodbye', back: 'До свидания', lang: 'English' },
   { front: 'Guten Morgen', back: 'Доброе утро', lang: 'Deutsch' },
+  { front: 'Please', back: 'Пожалуйста', lang: 'English' },
+  { front: 'Auf Wiedersehen', back: 'До свидания', lang: 'Deutsch' },
 ];
 
 function FlipCard({ front, back, lang }: { front: string; back: string; lang: string }) {
@@ -254,6 +334,11 @@ export default function Home() {
   const visibleCourses = filter === 'all' ? COURSES : COURSES.filter((c) => c.tags.includes(filter));
   const cycleGreeting = (key: 'en' | 'de' | 'ru') =>
     setGreet((g) => ({ ...g, [key]: (g[key] + 1) % GREETINGS[key].length }));
+  const [openState, setOpenState] = useState<OpenState>(() => currentOpenState());
+  useEffect(() => {
+    const id = window.setInterval(() => setOpenState(currentOpenState()), 60000);
+    return () => window.clearInterval(id);
+  }, []);
   const trackRef = useRef<HTMLDivElement>(null);
   const scrollReviews = (dir: number) => {
     const track = trackRef.current;
@@ -299,6 +384,10 @@ export default function Home() {
             <Link className="btn btn-primary btn-large" to="/kontakty#zayavka">{t('Записаться на бесплатное занятие')}</Link>
             <Link className="btn btn-ghost btn-large" to="/kursy">{t('Смотреть курсы')}</Link>
           </div>
+          <p className="open-status">
+            <span className={`status-dot ${openState}`} aria-hidden="true" />
+            {openState === 'open' ? t('Сейчас открыто') : openState === 'lunch' ? t('Обеденный перерыв') : t('Сейчас закрыто')}
+          </p>
           <ul className="hero-points">
             <li>{t('Мини-группы 3–5 человек')}</li>
             <li>{t('Бесплатное тестирование уровня')}</li>
