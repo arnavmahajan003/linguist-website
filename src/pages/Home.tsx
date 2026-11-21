@@ -90,7 +90,7 @@ export default function Home() {
   useEffect(() => {
     if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const hero = document.querySelector('.hero');
+    const hero = document.querySelector<HTMLElement>('.hero');
     const visual = document.querySelector<HTMLElement>('.hero-visual');
     if (!hero || !visual) return;
     const onMove = (e: PointerEvent) => {
