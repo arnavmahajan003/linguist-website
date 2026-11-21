@@ -31,7 +31,8 @@
 
 * { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+html { scroll-behavior: smooth; scroll-padding-top: 84px; -webkit-text-size-adjust: 100%; }
+* { -webkit-tap-highlight-color: transparent; }
 
 body {
   margin: 0;
@@ -314,7 +315,56 @@ p { max-width: 68ch; margin: 0 0 16px; }
 .hero-points li::before { content: '✓ '; color: var(--link); font-weight: 700; }
 
 /* Hero visual — stacked greeting bubbles over sun + cobalt shapes */
-.hero-visual { position: relative; min-height: 300px; z-index: 1; }
+.hero-visual { position: relative; min-height: 300px; z-index: 1; transition: transform 0.35s ease-out; }
+
+/* Rotating globe (pure SVG/CSS — no libraries) */
+.globe {
+  position: absolute;
+  width: 300px; height: 300px;
+  right: 0;
+  top: 26px;
+  z-index: 1;
+  animation: globe-float 7s ease-in-out infinite;
+}
+@keyframes globe-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+.globe-lines ellipse, .globe-lines line {
+  fill: none;
+  stroke: rgba(42, 69, 212, 0.45);
+  stroke-width: 1.4;
+}
+.globe-outline { fill: none; stroke: rgba(42, 69, 212, 0.55); stroke-width: 1.6; }
+.globe-orbit {
+  fill: none;
+  stroke: rgba(42, 69, 212, 0.3);
+  stroke-width: 1.4;
+  stroke-dasharray: 4 9;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: orbit-spin 46s linear infinite;
+}
+@keyframes orbit-spin {
+  to { transform: rotate(360deg); }
+}
+.globe-meridian {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: meridian-spin 5.4s linear infinite;
+}
+.globe-meridian.m2 { animation-delay: -1.8s; }
+.globe-meridian.m3 { animation-delay: -3.6s; }
+@keyframes meridian-spin {
+  0% { transform: scaleX(1); }
+  25% { transform: scaleX(0); }
+  50% { transform: scaleX(-1); }
+  75% { transform: scaleX(0); }
+  100% { transform: scaleX(1); }
+}
+[data-theme="dark"] .globe-lines ellipse, [data-theme="dark"] .globe-lines line { stroke: rgba(143, 166, 255, 0.5); }
+[data-theme="dark"] .globe-outline { stroke: rgba(143, 166, 255, 0.6); }
+[data-theme="dark"] .globe-orbit { stroke: rgba(143, 166, 255, 0.35); }
 .hero-visual::before {
   content: '';
   position: absolute;
@@ -656,18 +706,9 @@ p { max-width: 68ch; margin: 0 0 16px; }
 }
 .form-success-title { font-size: 1.25rem; font-weight: 700; margin: 0 0 8px; color: #065f46; }
 
-/* Scroll-reveal (progressive enhancement) */
-@supports (animation-timeline: view()) {
-  .card, .review {
-    animation: card-in 0.7s cubic-bezier(0.22, 0.8, 0.32, 1) both;
-    animation-timeline: view();
-    animation-range: entry 0% entry 55%;
-  }
-  @keyframes card-in {
-    from { opacity: 0; transform: translateY(24px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-}
+/* Scroll-reveal (classes added by JS only when IntersectionObserver exists) */
+.rv { opacity: 0; transform: translateY(22px); }
+.rv-in { opacity: 1; transform: none; transition: opacity 0.28s ease, transform 0.28s ease; }
 
 /* Admin */
 .admin-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
@@ -739,11 +780,8 @@ p { max-width: 68ch; margin: 0 0 16px; }
   .bubble-privet { font-size: 40px; top: 208px; }
 }
 
-/* Gentle 3D tilt on desktop hover */
+/* Gentle lift on desktop hover (cursor-follow 3D tilt is added by JS) */
 @media (hover: hover) and (min-width: 901px) {
-  .card-link:hover, .benefit-card:hover {
-    transform: perspective(900px) rotateX(2deg) rotateY(-2.5deg) translateY(-4px);
-  }
   .card:hover { transform: translateY(-3px); }
 }
 
@@ -752,6 +790,7 @@ p { max-width: 68ch; margin: 0 0 16px; }
   .hero-visual { min-height: 290px; max-width: 430px; }
   .hero-visual::before { width: 210px; height: 210px; }
   .hero-visual::after { width: 240px; height: 240px; }
+  .globe { width: 228px; height: 228px; top: 34px; }
   .bubble-privet { top: 178px; }
 }
 @media (max-width: 680px) {

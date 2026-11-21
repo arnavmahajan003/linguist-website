@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import EnquiryForm from '../components/EnquiryForm';
 import PageTitle from '../components/PageTitle';
@@ -85,6 +86,30 @@ const COURSES = [
 
 export default function Home() {
   const { t } = useLang();
+
+  useEffect(() => {
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const hero = document.querySelector('.hero');
+    const visual = document.querySelector<HTMLElement>('.hero-visual');
+    if (!hero || !visual) return;
+    const onMove = (e: PointerEvent) => {
+      const r = hero.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      visual.style.transform = `translate(${(x * 14).toFixed(1)}px, ${(y * 10).toFixed(1)}px)`;
+    };
+    const onLeave = () => {
+      visual.style.transform = '';
+    };
+    hero.addEventListener('pointermove', onMove);
+    hero.addEventListener('pointerleave', onLeave);
+    return () => {
+      hero.removeEventListener('pointermove', onMove);
+      hero.removeEventListener('pointerleave', onLeave);
+    };
+  }, []);
+
   return (
     <>
       <PageTitle title="Курсы иностранных языков в Твери" />
@@ -109,6 +134,26 @@ export default function Home() {
           <div className="hero-visual" aria-hidden="true">
             <span className="deco deco-circle-a" />
             <span className="deco deco-square-a" />
+            <svg className="globe" viewBox="0 0 200 200">
+              <defs>
+                <clipPath id="globe-clip"><circle cx="100" cy="100" r="86" /></clipPath>
+                <radialGradient id="globe-fill" cx="35%" cy="30%" r="85%">
+                  <stop offset="0%" stopColor="#5f7cff" stopOpacity="0.45" />
+                  <stop offset="100%" stopColor="#2a45d4" stopOpacity="0.1" />
+                </radialGradient>
+              </defs>
+              <circle cx="100" cy="100" r="86" fill="url(#globe-fill)" />
+              <g clipPath="url(#globe-clip)" className="globe-lines">
+                <ellipse cx="100" cy="100" rx="86" ry="30" />
+                <ellipse cx="100" cy="100" rx="86" ry="58" />
+                <line x1="14" y1="100" x2="186" y2="100" />
+                <ellipse cx="100" cy="100" rx="34" ry="86" className="globe-meridian m1" />
+                <ellipse cx="100" cy="100" rx="34" ry="86" className="globe-meridian m2" />
+                <ellipse cx="100" cy="100" rx="34" ry="86" className="globe-meridian m3" />
+              </g>
+              <circle cx="100" cy="100" r="86" className="globe-outline" />
+              <circle cx="100" cy="100" r="97" className="globe-orbit" />
+            </svg>
             <div className="bubble bubble-hello">Hello</div>
             <div className="bubble bubble-hallo">Hallo</div>
             <div className="bubble bubble-privet">Привет</div>

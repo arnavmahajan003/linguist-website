@@ -51,6 +51,72 @@ function SkipLink() {
   );
 }
 
+function MotionManager() {
+  const { pathname } = useLocation();
+
+  // Scroll-reveal: cards fade/slide in once, on every browser.
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!('IntersectionObserver' in window)) return;
+    const els = Array.from(
+      document.querySelectorAll<HTMLElement>('.card, .review, .form-wrap, .price-line'),
+    );
+    els.forEach((el) => el.classList.add('rv'));
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('rv-in');
+            io.unobserve(entry.target);
+          }
+        }
+      },
+      { threshold: 0.1 },
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, [pathname]);
+
+  // 3D tilt that follows the cursor on course and benefit cards (fine pointers only).
+  useEffect(() => {
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let current: HTMLElement | null = null;
+    const clear = () => {
+      if (current) {
+        current.style.transform = '';
+        current = null;
+      }
+    };
+    const onMove = (e: PointerEvent) => {
+      const el = (e.target as HTMLElement).closest?.(
+        '.card-link, .benefit-card',
+      ) as HTMLElement | null;
+      if (!el) {
+        clear();
+        return;
+      }
+      if (current && current !== el) clear();
+      current = el;
+      const r = el.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width - 0.5;
+      const py = (e.clientY - r.top) / r.height - 0.5;
+      el.style.transform = `perspective(900px) rotateX(${(-py * 6).toFixed(2)}deg) rotateY(${(px * 6).toFixed(2)}deg) translateY(-4px)`;
+    };
+    const onOut = (e: PointerEvent) => {
+      if (current && !current.contains(e.relatedTarget as Node)) clear();
+    };
+    document.addEventListener('pointermove', onMove);
+    document.addEventListener('pointerout', onOut);
+    return () => {
+      document.removeEventListener('pointermove', onMove);
+      document.removeEventListener('pointerout', onOut);
+    };
+  }, []);
+
+  return null;
+}
+
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
   useEffect(() => {
@@ -64,6 +130,7 @@ export default function App() {
     <LanguageProvider>
     <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, '') || undefined}>
       <ScrollToTop />
+      <MotionManager />
       <SkipLink />
       <Header />
       <main id="main">
