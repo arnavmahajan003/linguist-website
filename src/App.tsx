@@ -23,7 +23,7 @@ function ScrollToTop() {
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, '') || undefined}>
       <ScrollToTop />
       <a className="skip-link" href="#main">Перейти к содержанию</a>
       <Header />
