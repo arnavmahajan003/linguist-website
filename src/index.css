@@ -1095,6 +1095,11 @@ p { max-width: 68ch; margin: 0 0 16px; }
     radial-gradient(300px 160px at 90% -10%, rgba(255, 201, 60, 0.25), transparent 60%),
     linear-gradient(160deg, #2a1057, #7c3aed 58%, #5b2ee5);
 }
+.book-cover-de {
+  background:
+    radial-gradient(300px 160px at 90% -10%, rgba(255, 201, 60, 0.25), transparent 60%),
+    linear-gradient(160deg, #1d0b45, #6d28d9 58%, #2a45d4);
+}
 .book-card {
   display: grid;
   gap: 28px;

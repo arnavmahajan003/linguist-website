@@ -44,6 +44,22 @@ const BOOKS: Book[] = [
       'Финальный тест уровня HSK 1',
     ],
   },
+  {
+    url: `${import.meta.env.BASE_URL}book/linguist-german-a0-a1-book.pdf`,
+    fileName: 'linguist-german-a0-a1-book.pdf',
+    level: 'Deutsch A0–A1',
+    coverClass: 'book-cover-de',
+    subKey: 'Немецкий с нуля',
+    titleKey: 'Бесплатный учебник: Немецкий с нуля A0–A1',
+    leadKey:
+      'Наш собственный учебник немецкого для тех, кто начинает с самого начала: 100 страниц понятных объяснений на русском, упражнений и письменной практики.',
+    featureKeys: [
+      'Слова с артиклями der/die/das и произношением в каждой теме',
+      'Упражнения и письменная практика в каждой теме',
+      'Ответы в конце книги — можно заниматься самостоятельно',
+      'Финальный тест A1',
+    ],
+  },
 ];
 
 export default function BookPromo() {

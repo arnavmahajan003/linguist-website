@@ -1157,4 +1157,25 @@ zh['Финальный тест уровня HSK 1'] = 'HSK 1 级期末测试';
 de['Финальный тест уровня HSK 1'] = 'Abschlusstest auf HSK-1-Niveau';
 fr['Финальный тест уровня HSK 1'] = 'Test final de niveau HSK 1';
 
+en['Бесплатный учебник: Немецкий с нуля A0–A1'] = 'Free textbook: German from scratch A0–A1';
+zh['Бесплатный учебник: Немецкий с нуля A0–A1'] = '免费教材：德语零基础 A0–A1';
+de['Бесплатный учебник: Немецкий с нуля A0–A1'] = 'Kostenloses Lehrbuch: Deutsch von Grund auf A0–A1';
+fr['Бесплатный учебник: Немецкий с нуля A0–A1'] = 'Manuel gratuit : l’allemand depuis zéro A0–A1';
+en['Немецкий с нуля'] = 'German from scratch';
+zh['Немецкий с нуля'] = '德语零基础';
+de['Немецкий с нуля'] = 'Deutsch von Grund auf';
+fr['Немецкий с нуля'] = 'L’allemand depuis zéro';
+en['Наш собственный учебник немецкого для тех, кто начинает с самого начала: 100 страниц понятных объяснений на русском, упражнений и письменной практики.'] = 'Our own German textbook for complete beginners: 100 pages of clear explanations in Russian, exercises and writing practice.';
+zh['Наш собственный учебник немецкого для тех, кто начинает с самого начала: 100 страниц понятных объяснений на русском, упражнений и письменной практики.'] = '我们自编的德语教材，专为零基础学员编写：100 页俄语清晰讲解、练习和写作练习。';
+de['Наш собственный учебник немецкого для тех, кто начинает с самого начала: 100 страниц понятных объяснений на русском, упражнений и письменной практики.'] = 'Unser eigenes Deutsch-Lehrbuch für alle, die ganz von vorne anfangen: 100 Seiten mit verständlichen Erklärungen auf Russisch, Übungen und Schreibtraining.';
+fr['Наш собственный учебник немецкого для тех, кто начинает с самого начала: 100 страниц понятных объяснений на русском, упражнений и письменной практики.'] = 'Notre propre manuel d’allemand pour ceux qui partent de zéro : 100 pages d’explications claires en russe, d’exercices et de pratique écrite.';
+en['Слова с артиклями der/die/das и произношением в каждой теме'] = 'Words with articles der/die/das and pronunciation in every unit';
+zh['Слова с артиклями der/die/das и произношением в каждой теме'] = '每个单元的单词都带冠词 der/die/das 和发音';
+de['Слова с артиклями der/die/das и произношением в каждой теме'] = 'Wörter mit Artikeln der/die/das und Aussprache in jeder Lektion';
+fr['Слова с артиклями der/die/das и произношением в каждой теме'] = 'Mots avec articles der/die/das et prononciation dans chaque unité';
+en['Финальный тест A1'] = 'Final A1 test';
+zh['Финальный тест A1'] = 'A1 期末测试';
+de['Финальный тест A1'] = 'Abschlusstest A1';
+fr['Финальный тест A1'] = 'Test final A1';
+
 export const DICTS: Record<Exclude<Lang, 'ru'>, Record<string, string>> = { en, zh, de, fr };
