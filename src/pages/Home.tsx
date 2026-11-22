@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import BookPromo from '../components/BookPromo';
 import EnquiryForm from '../components/EnquiryForm';
 import PageTitle from '../components/PageTitle';
 import { CONTACTS, REVIEWS } from '../data/content';
@@ -471,6 +472,8 @@ export default function Home() {
           <Stat value={2} count label={t('первых занятия — бесплатно')} />
         </div>
       </section>
+
+      <BookPromo />
 
       <section className="section">
         <div className="container">

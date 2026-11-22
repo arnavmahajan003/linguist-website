@@ -1,3 +1,4 @@
+import BookPromo from '../components/BookPromo';
 import EnquiryForm from '../components/EnquiryForm';
 import PageTitle from '../components/PageTitle';
 import { CONTACTS } from '../data/content';
@@ -65,6 +66,8 @@ export default function Courses() {
           </p>
         </div>
       </section>
+
+      <BookPromo />
 
       <section className="section section-tint" id="zayavka">
         <div className="container form-wrap">
