@@ -1089,6 +1089,12 @@ p { max-width: 68ch; margin: 0 0 16px; }
 
 /* ---------- Dark theme (default) ---------- */
 /* Free textbook (A0–A1 book) promo */
+.book-list { display: grid; gap: 28px; }
+.book-cover-zh {
+  background:
+    radial-gradient(300px 160px at 90% -10%, rgba(255, 201, 60, 0.25), transparent 60%),
+    linear-gradient(160deg, #2a1057, #7c3aed 58%, #5b2ee5);
+}
 .book-card {
   display: grid;
   gap: 28px;
